@@ -5,7 +5,7 @@ import {
   updateAbout,
   uploadImage,
 } from "../controllers/aboutController.js";
-import { verifyAuth } from "../middleware/authmiddleware.js";
+import { verifyAuth } from "../middleware/authMiddleware.js";
 import { upload } from "../middleware/uploadMiddleware.js";
 
 const aboutRoutes = express.Router();
