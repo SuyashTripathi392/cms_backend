@@ -6,7 +6,7 @@ import {
   markAsRead, 
   deleteMessage 
 } from "../controllers/contactController.js";
-import { verifyAuth } from "../middleware/authmiddleware.js";
+import { verifyAuth } from "../middleware/authMiddleware.js";
 
 const contactRoutes = express.Router();
 
