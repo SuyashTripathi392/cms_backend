@@ -7,7 +7,7 @@ import {
   updateProject, 
   deleteProject 
 } from "../controllers/projectsController.js";
-import { verifyAuth } from "../middleware/authmiddleware.js";
+import { verifyAuth } from "../middleware/authMiddleware.js";
 import { upload } from "../middleware/uploadMiddleware.js";
 
 
