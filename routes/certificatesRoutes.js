@@ -7,7 +7,7 @@ import {
   updateCertificate, 
   deleteCertificate 
 } from "../controllers/certificatesController.js";
-import { verifyAuth } from "../middleware/authmiddleware.js";
+import { verifyAuth } from "../middleware/authMiddleware.js";
 import { upload } from "../middleware/uploadMiddleware.js";
 
 
