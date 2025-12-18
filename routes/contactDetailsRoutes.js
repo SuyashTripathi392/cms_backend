@@ -3,7 +3,7 @@ import {
   getContactDetails,
   updateContactDetails,
 } from "../controllers/contactDetailsController.js";
-import { verifyAuth } from "../middleware/authmiddleware.js";
+import { verifyAuth } from "../middleware/authMiddleware.js";
 
 const contactDetailsRoutes = express.Router();
 
