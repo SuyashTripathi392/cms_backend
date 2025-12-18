@@ -1,6 +1,6 @@
 // routes/skills.routes.js
 import express from "express";
-import { verifyAuth } from "../middleware/authmiddleware.js";
+import { verifyAuth } from "../middleware/authMiddleware.js";
 import { createSkill, deleteSkill, getSkills, updateSkill } from "../controllers/skillsController.js";
 
 
