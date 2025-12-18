@@ -13,10 +13,16 @@ import contactDetailsRoutes from './routes/contactDetailsRoutes.js';
 
 const app = express()
 
-app.use(cors({
-  origin: process.env.FRONTEND_URL, // frontend URL
-  credentials: true // <- must for cookies
-}));
+app.use(
+  cors({
+    origin: [
+      process.env.FRONTEND_URL_1,
+      process.env.FRONTEND_URL_2
+    ],
+    credentials: true
+  })
+);
+
 app.use(express.json())
 app.use(cookieParser())
 
