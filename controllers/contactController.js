@@ -15,6 +15,7 @@ export const sendMessage = async (req, res) => {
       });
     }
 
+    // 1️⃣ Save message to DB (Supabase)
     const { data, error } = await supabase
       .from("messages")
       .insert([{ name, email, message }])
@@ -23,30 +24,40 @@ export const sendMessage = async (req, res) => {
 
     if (error) throw error;
 
-    const html = CONTACT_MESSAGE_TEMPLATE
-      .replace('{{name}}', name)
-      .replace('{{email}}', email)
-      .replace('{{message}}', message);
-
-    const mailOptions = {
-      from: process.env.SENDER_EMAIL,
-      to: process.env.ADMIN_EMAIL,   // jaha message receive hoga
-      subject: "New Contact Form Message",
-      html
-    };
-
-    await transporter.sendMail(mailOptions);
-
+    // 2️⃣ Send response IMMEDIATELY (🔥 important)
     res.status(201).json({
       success: true,
       message: "Message sent successfully",
       data
     });
+
+    // 3️⃣ Send email in background (NON-BLOCKING)
+    const html = CONTACT_MESSAGE_TEMPLATE
+      .replace("{{name}}", name)
+      .replace("{{email}}", email)
+      .replace("{{message}}", message);
+
+    const mailOptions = {
+      from: process.env.SENDER_EMAIL,
+      to: process.env.ADMIN_EMAIL,
+      subject: "New Contact Form Message",
+      html
+    };
+
+    transporter.sendMail(mailOptions).catch((err) => {
+      console.error("Mail send failed:", err.message);
+    });
+
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    // Safety response (agar DB fail ho)
+    if (!res.headersSent) {
+      res.status(500).json({
+        success: false,
+        message: error.message || "Something went wrong"
+      });
+    }
   }
 };
-
 // Get all messages (protected)
 export const getMessages = async (req, res) => {
   try {
