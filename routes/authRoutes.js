@@ -2,7 +2,7 @@ import express from "express";
 import { signup,login, uploadImage, profile, logout } from "../controllers/authController.js";
 
 import { upload } from "../middleware/uploadMiddleware.js";
-import { verifyAuth } from "../middleware/authmiddleware.js";
+import { verifyAuth } from "../middleware/authMiddleware.js";
 
 const authRoutes = express.Router();
 
