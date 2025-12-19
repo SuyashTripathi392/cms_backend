@@ -7,14 +7,15 @@ export const sendMessage = async (req, res) => {
   try {
     const { name, email, message } = req.body;
 
+    // Validation
     if (!name || !email || !message) {
-      return res.status(400).json({
-        success: false,
-        message: "All fields are required",
+      return res.status(400).json({ 
+        success: false, 
+        message: "All fields required" 
       });
     }
 
-    // 1️⃣ Save message to DB (Supabase)
+    // Save to DB
     const { data, error } = await supabase
       .from("messages")
       .insert([{ name, email, message }])
@@ -23,51 +24,40 @@ export const sendMessage = async (req, res) => {
 
     if (error) throw error;
 
-    // 2️⃣ Send response IMMEDIATELY (🔥 important)
+    // Send response first
     res.status(201).json({
       success: true,
       message: "Message sent successfully",
-      data,
+      data
     });
 
-    // 3️⃣ Send email in background (NON-BLOCKING)
+    // Email template replace
     const html = CONTACT_MESSAGE_TEMPLATE
       .replace("{{name}}", name)
       .replace("{{email}}", email)
       .replace("{{message}}", message);
 
-    const mailOptions = {
+    // Send email
+    transporter.sendMail({
       from: process.env.SENDER_EMAIL,
       to: process.env.ADMIN_EMAIL,
-      subject: "New Contact Form Message",
-      html,
-    };
-
-    // Background email send with detailed error logging
-    (async () => {
-      try {
-        const info = await transporter.sendMail(mailOptions);
-        console.log("➡ Email sent successfully:", info.response);
-      } catch (err) {
-        console.error("❌ Mail send failed!");
-        console.error("Error message:", err.message);
-        console.error("Full error object:", err);
-      }
-    })();
+      subject: `New message from ${name}`,
+      html
+    }).then(() => {
+      console.log("Email sent");
+    }).catch(err => {
+      console.log("Email error:", err.message);
+    });
 
   } catch (error) {
-    // Safety response (agar DB fail ho)
     if (!res.headersSent) {
       res.status(500).json({
         success: false,
-        message: error.message || "Something went wrong",
+        message: error.message
       });
     }
   }
 };
-
-
-
 
 
 
